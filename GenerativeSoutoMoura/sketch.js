@@ -3,16 +3,41 @@ const cubeSize = 120; // Size of each cube
 const modelA = []; // Array of 3D models
 const modelB = []; // Array of 3D models
 const modelC = []; // Array of 3D models
+const modelD = []; // Array of 3D models
+const modelE = []; // Array of 3D models
+const modelF = []; // Array of 3D models
+const modelG = []; // Array of 3D models
+const modelH = []; // Array of 3D models
+const modelI = []; // Array of 3D models
 var tilesA = []; //modules A row
 
 
 function preload() {
-    // Load the 3D models
-    for (let i = 0; i < 9; i++) {
-        modelA[i] = loadModel('Estadio_Braga/A'+(i+1)+'.obj');
-        modelB[i] = loadModel('Estadio_Braga/B'+(i+1)+'.obj');
-        modelC[i] = loadModel('Estadio_Braga/C'+(i+1)+'.obj');
-    }
+  // Load the 3D models
+  for (let i = 0; i < 18; i++) {
+      modelA[i] = loadModel('Modules/Arrabida/A'+(i+1)+'.obj');
+      modelI[i] = loadModel('Modules/Quinta_Lago/A'+(i+1)+'.obj');
+  }
+  for (let i = 0; i < 22; i++) {
+      modelB[i] = loadModel('Modules/Bom_Jesus/A'+(i+1)+'.obj');
+  }
+  for (let i = 0; i < 27; i++) {
+      modelC[i] = loadModel('Modules/Cantareira/A'+(i+1)+'.obj');
+      modelF[i] = loadModel('Modules/Cubos/A'+(i+1)+'.obj');
+      modelG[i] = loadModel('Modules/Estadio_Braga/A'+(i+1)+'.obj');
+  }
+  for (let i = 0; i < 19; i++) {
+      modelD[i] = loadModel('Modules/Cascais/A'+(i+1)+'.obj');
+  }
+  for (let i = 0; i < 21; i++) {
+      modelE[i] = loadModel('Modules/Cinema/A'+(i+1)+'.obj');
+  }
+  for (let i = 0; i < 16; i++) {
+      modelH[i] = loadModel('Modules/Paula_Rego/A'+(i+1)+'.obj');
+  }
+  for (let i = 0; i < 13; i++) {
+      modelJ[i] = loadModel('Modules/Sete_Cidades/A'+(i+1)+'.obj');
+  }
 }
 
 function setup() {
