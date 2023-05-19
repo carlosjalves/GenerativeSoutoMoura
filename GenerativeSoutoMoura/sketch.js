@@ -3,6 +3,8 @@ const cubeSize = 120; // Size of each cube
 const modelA = []; // Array of 3D models
 const modelB = []; // Array of 3D models
 const modelC = []; // Array of 3D models
+var tilesA = []; //modules A row
+
 
 function preload() {
     // Load the 3D models
@@ -15,6 +17,35 @@ function preload() {
 
 function setup() {
     createCanvas(800, 800, WEBGL);
+
+    //load modules of A building
+    for(let h=0; h < 9; h++){
+        //module limits evaluation
+        var min_x = 30;
+        var max_x = -30;
+        var min_y = 30;
+        var max_y = -30;
+        var min_z = 30;
+        var max_z = -30;
+
+        //set bounding box
+        for(let i = 0; i<modelA[h].computeFaces().vertices.length; i++){
+            if(round(modelA[h].computeFaces().vertices[i].x) > max_x) max_x = int(modelA[h].computeFaces().vertices[i].x);
+            if(round(modelA[h].computeFaces().vertices[i].x) < min_x) min_x = int(modelA[h].computeFaces().vertices[i].x); 
+            
+            if(round(modelA[h].computeFaces().vertices[i].y) > max_y) max_y = int(modelA[h].computeFaces().vertices[i].y);
+            if(round(modelA[h].computeFaces().vertices[i].y) < min_y) min_y = int(modelA[h].computeFaces().vertices[i].y); 
+            
+            if(round(modelA[h].computeFaces().vertices[i].z) > max_z) max_z = int(modelA[h].computeFaces().vertices[i].z);
+            if(round(modelA[h].computeFaces().vertices[i].z) < min_z) min_z = int(modelA[h].computeFaces().vertices[i].z); 
+            }
+        
+        tilesA[h] = [modelA[h], min_x, max_x, min_y, max_y, min_z, max_z];    
+        //console.log(tilesA);
+    } 
+
+    //console.log(tilesA);
+    generateRules(tilesA);
 }
 
 function draw() {
@@ -59,3 +90,53 @@ function drawRow(x,z,xP,yP,zP,models){
     model(models[modelIndex]);
     pop();
 }
+
+function generateRules(tiles){
+    var rules = []
+    //evaluate rules
+    for (var i = 0; i < tiles.length-1; i++){
+      for (var j = i + 1; j < tiles.length; j++){
+        if (fit("x",tiles[i],tiles[j])){
+          rules.push(['x',i,j])
+        }
+        if (fit("y",tiles[i],tiles[j])){
+          rules.push(['y',i,j])
+        }
+        if (fit("z",tiles[i],tiles[j])){
+          rules.push(['z',i,j])
+        }
+      }
+    }
+    console.log(rules);
+    return {rules}
+  }
+
+  function fit(axis,a,b){
+    //check if sizes are the same
+    if (axis == "x"){
+      for (var i = 0; i < a.length-1; i++){
+        for (var j = i+1; j < b.length; j++){
+          if (a[2] - a[1] != b[2] - b[1]){
+            return false;
+          }
+        }
+      }
+    }else if (axis == "y"){
+      for (var i = 0; i < a.length-1; i++){
+        for (var j = i+1; j < b.length; j++){
+          if (a[4] - a[3] != b[4] - b[3]){
+            return false;
+          }
+        }
+      }
+    }else if (axis == "z"){
+      for (var i = 0; i < a.length-1; i++){
+        for (var j = i+1; j < b.length; j++){
+          if (a[6] - a[5] != b[6] - b[5]){
+            return false;
+          }
+        }
+      }      
+    }
+    return true;
+  }
