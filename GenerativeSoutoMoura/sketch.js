@@ -1,5 +1,5 @@
 const gridSize = 3; // Size of the grid
-const cubeSize = 120; // Size of each cube
+
 const modelA = []; // Array of 3D models
 const modelB = []; // Array of 3D models
 const modelC = []; // Array of 3D models
@@ -9,39 +9,22 @@ const modelF = []; // Array of 3D models
 const modelG = []; // Array of 3D models
 const modelH = []; // Array of 3D models
 const modelI = []; // Array of 3D models
-var tilesA = []; //modules A row
+const modelJ = []; // Array of 3D models
+
 const cubeSize = 30; // Size of each cube
 
 // Current state of the grid
 let grid = [];
 
-//models
-const model1 = [];
-const model2 = [];
-const model3 = [];
-const model4 = [];
-const model5 = [];
-const model6 = [];
-const model7 = [];
-const model8 = [];
-const model9 = [];
-const model10 = [];
-
 //selected models
-var modelA = []; // Array of 3D models
-var modelB = []; // Array of 3D models
-var modelC = []; // Array of 3D models
+var model1 = []; // Array of 3D models
+var model2 = []; // Array of 3D models
+var model3 = []; // Array of 3D models
 
 //tiles
 var tiles = [];
 
 function preload() {
-    // Load the 3D models
-    for (let i = 0; i < 9; i++) {
-        model1[i] = loadModel('Estadio_Braga/A'+(i+1)+'.obj');
-        model2[i] = loadModel('Estadio_Braga/B'+(i+1)+'.obj');
-        model3[i] = loadModel('Estadio_Braga/C'+(i+1)+'.obj');
-    }
   // Load the 3D models
   for (let i = 0; i < 18; i++) {
       modelA[i] = loadModel('Modules/Arrabida/A'+(i+1)+'.obj');
@@ -73,12 +56,12 @@ function setup() {
     createCanvas(800, 800, WEBGL);
 
     //select models
-    modelA = model1;
-    modelB = model2;
-    modelC = model3;
+    model1 = modelA;
+    model2 = modelG;
+    model3 = modelA;
     
     //load modules of A building + CREATE TILES
-    for(let h=0; h < modelA.length; h++){
+    for(let h=0; h < model1.length; h++){
         //module limits evaluation
         var min_x = 30;
         var max_x = -30;
@@ -88,21 +71,21 @@ function setup() {
         var max_z = -30;
 
         //set bounding box
-        for(let i = 0; i<modelA[h].vertices.length; i++){
-            if(round(modelA[h].vertices[i].x) > max_x) max_x = int(modelA[h].vertices[i].x);
-            if(round(modelA[h].vertices[i].x) < min_x) min_x = int(modelA[h].vertices[i].x); 
+        for(let i = 0; i<model1[h].vertices.length; i++){
+            if(round(model1[h].vertices[i].x) > max_x) max_x = int(model1[h].vertices[i].x);
+            if(round(model1[h].vertices[i].x) < min_x) min_x = int(model1[h].vertices[i].x); 
             
-            if(round(modelA[h].vertices[i].y) > max_y) max_y = int(modelA[h].vertices[i].y);
-            if(round(modelA[h].vertices[i].y) < min_y) min_y = int(modelA[h].vertices[i].y); 
+            if(round(model1[h].vertices[i].y) > max_y) max_y = int(model1[h].vertices[i].y);
+            if(round(model1[h].vertices[i].y) < min_y) min_y = int(model1[h].vertices[i].y); 
             
-            if(round(modelA[h].vertices[i].z) > max_z) max_z = int(modelA[h].vertices[i].z);
-            if(round(modelA[h].vertices[i].z) < min_z) min_z = int(modelA[h].vertices[i].z); 
+            if(round(model1[h].vertices[i].z) > max_z) max_z = int(model1[h].vertices[i].z);
+            if(round(model1[h].vertices[i].z) < min_z) min_z = int(model1[h].vertices[i].z); 
             }
-            tiles[h] = new Tile(modelA[h], max_x-min_x, max_y-min_y, max_z-min_z);   
+            tiles[h] = new Tile(model1[h], max_x-min_x, max_y-min_y, max_z-min_z);   
     }
 
     //load modules of B building + CREATE TILES
-    for(let h=0; h < modelB.length; h++){
+    for(let h=0; h < model2.length; h++){
       //module limits evaluation
       var min_x = 30;
       var max_x = -30;
@@ -112,21 +95,22 @@ function setup() {
       var max_z = -30;
 
       //set bounding box
-      for(let i = 0; i<modelB[h].vertices.length; i++){
-          if(round(modelB[h].vertices[i].x) > max_x) max_x = int(modelB[h].vertices[i].x);
-          if(round(modelB[h].vertices[i].x) < min_x) min_x = int(modelB[h].vertices[i].x); 
+      for(let i = 0; i<model2[h].vertices.length; i++){
+          if(round(model2[h].vertices[i].x) > max_x) max_x = int(model2[h].vertices[i].x);
+          if(round(model2[h].vertices[i].x) < min_x) min_x = int(model2[h].vertices[i].x); 
           
-          if(round(modelB[h].vertices[i].y) > max_y) max_y = int(modelB[h].vertices[i].y);
-          if(round(modelB[h].vertices[i].y) < min_y) min_y = int(modelB[h].vertices[i].y); 
+          if(round(model2[h].vertices[i].y) > max_y) max_y = int(model2[h].vertices[i].y);
+          if(round(model2[h].vertices[i].y) < min_y) min_y = int(model2[h].vertices[i].y); 
           
-          if(round(modelB[h].vertices[i].z) > max_z) max_z = int(modelB[h].vertices[i].z);
-          if(round(modelB[h].vertices[i].z) < min_z) min_z = int(modelB[h].vertices[i].z); 
-          }    
-      tiles[h+(modelA.length-1)] = new Tile(modelB[h], max_x-min_x, max_y-min_y, max_z-min_z);
+          if(round(model2[h].vertices[i].z) > max_z) max_z = int(model2[h].vertices[i].z);
+          if(round(model2[h].vertices[i].z) < min_z) min_z = int(model2[h].vertices[i].z); 
+          }  
+    
+      tiles[h+(model1.length)] = new Tile(model2[h], max_x-min_x, max_y-min_y, max_z-min_z);
   }
 
    //load modules of C building + CREATE TILES
-   for(let h=0; h < modelC.length; h++){
+   for(let h=0; h < model3.length; h++){
     //module limits evaluation
     var min_x = 30;
     var max_x = -30;
@@ -136,17 +120,17 @@ function setup() {
     var max_z = -30;
 
     //set bounding box
-    for(let i = 0; i<modelC[h].vertices.length; i++){
-        if(round(modelC[h].vertices[i].x) > max_x) max_x = int(modelC[h].vertices[i].x);
-        if(round(modelC[h].vertices[i].x) < min_x) min_x = int(modelC[h].vertices[i].x); 
+    for(let i = 0; i<model3[h].vertices.length; i++){
+        if(round(model3[h].vertices[i].x) > max_x) max_x = int(model3[h].vertices[i].x);
+        if(round(model3[h].vertices[i].x) < min_x) min_x = int(model3[h].vertices[i].x); 
         
-        if(round(modelC[h].vertices[i].y) > max_y) max_y = int(modelC[h].vertices[i].y);
-        if(round(modelC[h].vertices[i].y) < min_y) min_y = int(modelC[h].vertices[i].y); 
+        if(round(model3[h].vertices[i].y) > max_y) max_y = int(model3[h].vertices[i].y);
+        if(round(model3[h].vertices[i].y) < min_y) min_y = int(model3[h].vertices[i].y); 
         
-        if(round(modelC[h].vertices[i].z) > max_z) max_z = int(modelC[h].vertices[i].z);
-        if(round(modelC[h].vertices[i].z) < min_z) min_z = int(modelC[h].vertices[i].z); 
+        if(round(model3[h].vertices[i].z) > max_z) max_z = int(model3[h].vertices[i].z);
+        if(round(model3[h].vertices[i].z) < min_z) min_z = int(model3[h].vertices[i].z); 
         }
-        tiles[h + (modelA.length+modelB.length-1) ] = new Tile(modelC[h], max_x-min_x, max_y-min_y, max_z-min_z);  
+        tiles[h + (model1.length+model2.length) ] = new Tile(model3[h], max_x-min_x, max_y-min_y, max_z-min_z);  
 }
 
   // Generate the adjacency rules based on edges
@@ -158,11 +142,12 @@ function setup() {
   // Start over
   startOver();
   wfc();
+  console.log(tiles);
 }
 
 function startOver() {
   // Create cell for each spot on the grid
-  for (let i = 0; i < cubeSize*cubeSize*cubeSize; i++) {
+  for (let i = 0; i < gridSize*gridSize*gridSize; i++) {
     grid[i] = new Cell(tiles.length);
   }
 }
@@ -196,7 +181,7 @@ function draw() {
                   drawModule(x,y,z, xPos, yPos, zPos, tiles[index].obj);
                 }
                 else{
-                  drawCube(xPos,yPos,zPos);
+                  //drawCube(xPos,yPos,zPos);
                 }
                 /* 
                 // Check the row
@@ -216,8 +201,9 @@ function drawCube(xP,yP,zP){
       push();
       translate(xP, yP, zP);
       scale(4); // Scale the model if needed
-      noStroke();
+      //noStroke();
       //fill(30);
+      noFill();
       stroke(0,255,0);
       rotateX(-PI);
       rotateY(-PI);
@@ -278,11 +264,12 @@ if (grid.length == 0) {
 
 // Pick a cell with least entropy
 // Sort by entropy
-gridCopy.sort((a, b) => {
+/* gridCopy.sort((a, b) => {
   return a.options.length - b.options.length;
-});
+}); */
+console.log(gridCopy);
 
-// Keep only the lowest entropy cells
+/* // Keep only the lowest entropy cells
 let len = gridCopy[0].options.length;
 let stopIndex = 0;
 for (let i = 1; i < gridCopy.length; i++) {
@@ -291,7 +278,7 @@ for (let i = 1; i < gridCopy.length; i++) {
     break;
   }
 }
-if (stopIndex > 0) gridCopy.splice(stopIndex);
+if (stopIndex > 0) gridCopy.splice(stopIndex); */
 
 // Collapse a cell
 const cell = random(gridCopy);
@@ -301,20 +288,20 @@ if (pick === undefined) {
   startOver();
   return;
 }
-cell.options = [pick];
+else cell.options = [pick];
 
 //Calculate Entropy
 const nextGrid = [];
-for (let j = 0; j < cubeSize; j++) { //X
-  for (let i = 0; i < cubeSize; i++) { // Y
-    for(let h = 0; h < cubeSize; h++){ // Z
+for (let j = 0; j < gridSize; j++) { //X
+  for (let i = 0; i < gridSize; i++) { // Y
+    for(let h = 0; h < gridSize; h++){ // Z
       let index = ((h * gridSize + i) * gridSize) + j;
        if (grid[index].collapsed) {
           nextGrid[index] = grid[index];
       } else {
         let options = new Array(tiles.length).fill(0).map((x, i) => i);
       // Look RIGHT
-      if (j < cubeSize - 1) {
+      if (j < gridSize - 1) {
         let right = grid[((h * gridSize + i) * gridSize) + j + 1];
         let validOptions = [];
         for (let option of right.options) {
@@ -324,7 +311,7 @@ for (let j = 0; j < cubeSize; j++) { //X
         checkValid(options, validOptions);
       }
       // Look UP
-      if (h < cubeSize - 1) {
+      if (h < gridSize - 1) {
         let up = grid[(((h+1) * gridSize + i) * gridSize) + j];
         let validOptions = [];
         for (let option of up.options) {
@@ -354,7 +341,7 @@ for (let j = 0; j < cubeSize; j++) { //X
         checkValid(options, validOptions);
       }
       // Look FRONT
-      if (i < cubeSize - 1) {
+      if (i < gridSize - 1) {
         let front = grid[((h * gridSize + (i+1)) * gridSize) + j];
         let validOptions = [];
         for (let option of front.options) {
