@@ -1,6 +1,13 @@
 const gridSize = 3; // Size of the grid
 const cubeSize = 120; // Size of each cube
 
+const menu1 = document.getElementById("menu1");
+const menu2 = document.getElementById("menu2");
+const menu3 = document.getElementById("menu3");
+const submitBtn = document.getElementById("submitBtn");
+
+let selectedOptions = 0;
+
 let selectedNames = [];
 let models = [];
 let numObj = [];
@@ -82,33 +89,52 @@ function drawRow(x,z,xP,yP,zP,models){
     pop();
 }
 
-function handleCheckboxChange() {
-    const checkboxes = selectAll(".nameCheckbox");
-    const selectedCheckboxes = checkboxes.filter((checkbox) => checkbox.checked());
+function handleSelect() {
+        if (menu1.value !== "" && menu2.value !== "" && menu3.value !== "") {
+            submitBtn.style.display = "block";
+        } else {
+            submitBtn.style.display = "none";
+        }
+}
 
-    if (selectedCheckboxes.length === 3) {
-        selectedNames = selectedCheckboxes.map((checkbox) => checkbox.value());
-        select("#submitBtn").style("display", "block");
-    } else {
-        selectedNames = [];
-        select("#submitBtn").style("display", "none");
+function disableSelect() {
+    let options = document.getElementsByTagName("option");
+
+    for ( let i=0; i<options.length; i++)
+    {
+        if(options[i].value===menu1.value || options[i].value===menu2.value || options[i].value===menu3.value) options[i].setAttribute('disabled','');
     }
 }
 
+menu1.addEventListener("change", () => {
+    selectedOptions = menu1.value === "" ? selectedOptions - 1 : selectedOptions + 1;
+    disableSelect();
+    handleSelect();
+});
 
-function handleSubmit() {
-    const checkboxes = selectAll(".nameCheckbox");
-    selectedNames = checkboxes
-        .filter((checkbox) => checkbox.checked())
-        .map((checkbox) => checkbox.value());
+menu2.addEventListener("change", () => {
+    selectedOptions = menu2.value === "" ? selectedOptions - 1 : selectedOptions + 1;
+    disableSelect();
+    handleSelect();
 
-    console.log("Respostas selecionadas:", selectedNames);
+});
 
+menu3.addEventListener("change", () => {
+    selectedOptions = menu3.value === "" ? selectedOptions - 1 : selectedOptions + 1;
+    disableSelect();
+    handleSelect();
+});
+
+submitBtn.addEventListener("click", () => {
+    selectedNames = [
+        menu1.value,
+        menu2.value,
+        menu3.value
+    ];
+
+    console.log("Selected names:", selectedNames);
     setModels();
-    console.log(models);
-}
-
-document.getElementById("submitBtn").addEventListener("click", handleSubmit);
+});
 
 function setModels() {
     // Carrega os modelos com base nas respostas selecionadas
