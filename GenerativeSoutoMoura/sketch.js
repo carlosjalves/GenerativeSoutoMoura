@@ -1,4 +1,5 @@
 const gridSize = 3; // Size of the grid
+const cubeSize = 30; // Size of each cube
 
 const modelA = []; // Array of 3D models
 const modelB = []; // Array of 3D models
@@ -11,9 +12,7 @@ const modelH = []; // Array of 3D models
 const modelI = []; // Array of 3D models
 const modelJ = []; // Array of 3D models
 
-const cubeSize = 30; // Size of each cube
-
-// Current state of the grid
+// Grid Cells -> Empty
 let grid = [];
 
 //selected models
@@ -23,6 +22,7 @@ var model3 = []; // Array of 3D models
 
 //tiles
 var tiles = [];
+let counter = 0;
 
 function preload() {
   // Load the 3D models
@@ -56,9 +56,9 @@ function setup() {
     createCanvas(800, 800, WEBGL);
 
     //select models
-    model1 = modelA;
-    model2 = modelG;
-    model3 = modelA;
+    model1 = modelC;
+    model2 = modelA;
+    model3 = modelB;
     
     //load modules of A building + CREATE TILES
     for(let h=0; h < model1.length; h++){
@@ -130,20 +130,72 @@ function setup() {
         if(round(model3[h].vertices[i].z) > max_z) max_z = int(model3[h].vertices[i].z);
         if(round(model3[h].vertices[i].z) < min_z) min_z = int(model3[h].vertices[i].z); 
         }
-        tiles[h + (model1.length+model2.length) ] = new Tile(model3[h], max_x-min_x, max_y-min_y, max_z-min_z);  
+        
+        tiles[h + (model1.length+model2.length) ] = new Tile(model3[h], max_x-min_x, max_y-min_y, max_z-min_z); 
 }
 
-  // Generate the adjacency rules based on edges
-    for (let i = 0; i < tiles.length; i++) {
-      const tile = tiles[i];
-      tile.analyze(tiles);
+  for(let i = 0; i < gridSize*gridSize*gridSize; i++){
+    if(i < 9){
+      if(i < 3) grid[i] = new Cell(i,0,0);
+      else if(i < 6) grid[i] = new Cell(i-3,1,0);
+      else grid[i] = new Cell(i-6,2,0);
+    }
+    if(i >= 9 && i < 18){
+      if(i < 12) grid[i] = new Cell(i-9,0,1);
+      else if(i < 15) grid[i] = new Cell(i-12,1,1);
+      else grid[i] = new Cell(i-15,2,1);
+    }
+    if(i >= 18 && i < 27){
+      if(i < 21) grid[i] = new Cell(i-18,0,2);
+      else if(i < 24) grid[i] = new Cell(i-21,1,2);
+      else grid[i] = new Cell(i-24,2,2);
+    }
+  }
+  
+  //console.log(grid);
+  while(counter < grid.length){
+    if(!grid[counter].filled) setTimeout(selectModules(counter),1000);
+}
+}
+
+function selectModules(i){
+  let random_index = round(random(tiles.length));
+    let z_check = true;
+    let x_check = true;
+    let y_check = true;
+    if(grid[i].x > 0){
+        x_check = compareEdges("left", random_index, i);
+    }
+      else if(grid[i].y > 0){
+        y_check = compareEdges("back", random_index, i);
+      }
+      else if(grid[i].z > 0){
+        z_check = compareEdges("down", random_index, i);
+      }
+      if(z_check && y_check && x_check){
+        grid[i].filled = true;
+        grid[i].module_index = random_index; 
+        counter++;
+      }
     }
 
-  // Start over
-  startOver();
-  wfc();
-  console.log(tiles);
+//compare tile edges -> tile 1 in grid + tile 2 to add
+function compareEdges(direction, tile_index, cell){
+  if(direction == "left"){
+    if(tiles[grid[cell-1].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-1].module_index].z_size == tiles[tile_index].z_size) return true;
+    else return false;
+  }  
+    else if(direction == "down"){
+      if(tiles[grid[cell-9].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-9].module_index].z_size == tiles[tile_index].z_size) return true;
+      else return false;
+    }
+    else if(direction == "back"){
+      if(tiles[grid[cell-3].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-3].module_index].z_size == tiles[tile_index].z_size) return true;
+      else return false;
 }
+}
+
+
 
 function startOver() {
   // Create cell for each spot on the grid
@@ -161,41 +213,32 @@ function checkValid(arr, valid) {
   }
 }
 
+/* scan each grid module
+create funcion select random from allmodules
+for each cell check if they can be placed otherwise run function select random again
+for 1st select only
+2nd check left...
+until all 27cells are filled
+might take longer but it can produce better results */
 
 function draw() {
     background(220);
     lights();
     rotateY(frameCount * 0.01); // Rotate the grid
-    for (let x = 0; x < gridSize; x++) {
-        for (let y = 0; y < gridSize; y++) {
-            for (let z = 0; z < gridSize; z++) {
-                let cell = grid[((z * gridSize + y) * gridSize) + x];
                 //console.log(cell);
-                // Calculate the position of the cube
-                const xPos = (x - 1) * cubeSize;
-                const yPos = (y - 1) * cubeSize;
-                const zPos = (z - 1) * cubeSize;
+  
 
-                if(!cell.collapsed){
-                  let index = cell.options[0];
-                  drawModule(x,y,z, xPos, yPos, zPos, tiles[index].obj);
+                for(let i=0; i<grid.length; i++){
+                  const xPos = grid[i].x * cubeSize;
+                  const yPos = grid[i].y * cubeSize;
+                  const zPos = grid[i].z * cubeSize;
+                  if(grid[i].filled){
+                    drawModule(xPos, yPos, zPos, tiles[grid[i].module_index].obj);
+                  }
                 }
-                else{
-                  //drawCube(xPos,yPos,zPos);
-                }
-                /* 
-                // Check the row
-                if (y === gridSize - 1) {
-                    drawRow(x,z,xPos,yPos,zPos,modelA);
-                }else if(y === gridSize - 2){
-                    drawRow(x,z,xPos,yPos,zPos,modelB);
-                } else {
-                    drawRow(x,z,xPos,yPos,zPos,modelC);
-                } */
+              
             }
-        }
-    }
-}
+
 
 function drawCube(xP,yP,zP){
       push();
@@ -214,9 +257,8 @@ function drawCube(xP,yP,zP){
 }
 
 
-function drawModule(x,y,z,xP,yP,zP,mod){
+function drawModule(xP,yP,zP,mod){
     // Set the model for the last row
-    const modelIndex = x * gridSize + z;
     // Draw the model
     push();
     translate(xP, yP, zP);
