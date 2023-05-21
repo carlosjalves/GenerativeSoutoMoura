@@ -1,6 +1,3 @@
-const gridSize = 3; // Size of the grid
-const cubeSize = 120; // Size of each cube
-
 const menu1 = document.getElementById("menu1");
 const menu2 = document.getElementById("menu2");
 const menu3 = document.getElementById("menu3");
@@ -12,82 +9,12 @@ let selectedNames = [];
 let models = [];
 let numObj = [];
 
-const modelA = []; // Array of 3D models
-const modelB = []; // Array of 3D models
-const modelC = []; // Array of 3D models
-
 let colorR, colorG, colorB;
 
 let isLoadCalled = false;
-let isDrawCalled = false;
 
-function setup() {
-    createCanvas(800, 800, WEBGL);
-
-    const checkboxes = selectAll(".nameCheckbox");
-    checkboxes.forEach((checkbox) => checkbox.changed(handleCheckboxChange));
-
-    colorR = random(255);
-    colorG = random(255);
-    colorB = random(255);
-}
-
-function draw() {
-    background(255);
-    lights();
-    //ambientLight(colorR,colorG,colorB); // white light
-    ambientMaterial(150);
-    rotateY(frameCount * 0.01); // Rotate the grid
-
-    if (isLoadCalled) {
-        loadModels();
-        isLoadCalled = false;
-        isDrawCalled = true;
-    }
-
-    if (isDrawCalled) {
-        drawModel();
-    }
-}
-
-function drawModel(){
-    for (let x = 0; x < gridSize; x++) {
-        for (let y = 0; y < gridSize; y++) {
-            for (let z = 0; z < gridSize; z++) {
-                // Calculate the position of the cube
-                const xPos = (x - 1) * cubeSize;
-                const yPos = (y - 1) * cubeSize;
-                const zPos = (z - 1) * cubeSize;
-
-                // Check the row
-                if (y === gridSize - 1) {
-                    drawRow(x,z,xPos,yPos,zPos,modelA);
-                }else if(y === gridSize - 2){
-                    drawRow(x,z,xPos,yPos,zPos,modelB);
-                } else {
-                    drawRow(x,z,xPos,yPos,zPos,modelC);
-                }
-            }
-        }
-    }
-}
-
-function drawRow(x,z,xP,yP,zP,models){
-    // Set the model for the last row
-    const modelIndex = x * gridSize + z;
-    // Draw the model
-    push();
-    translate(xP, yP, zP);
-    scale(4); // Scale the model if needed
-    noStroke();
-    fill(colorR, colorG, colorB);
-    rotateX(-PI);
-    rotateY(-PI);
-    //rotateZ(PI/2);
-    translate(0,-15);
-    model(models[modelIndex]);
-    pop();
-}
+const checkboxes = document.querySelectorAll(".nameCheckbox");
+checkboxes.forEach((checkbox) => checkbox.changed(handleCheckboxChange));
 
 function handleSelect() {
         if (menu1.value !== "" && menu2.value !== "" && menu3.value !== "") {
@@ -106,12 +33,12 @@ function disableSelect() {
     }
 }
 
-menu1.addEventListener("change", () => {
+if(menu1 || menu2 || menu3){
+    menu1.addEventListener("change", () => {
     selectedOptions = menu1.value === "" ? selectedOptions - 1 : selectedOptions + 1;
     disableSelect();
     handleSelect();
 });
-
 menu2.addEventListener("change", () => {
     selectedOptions = menu2.value === "" ? selectedOptions - 1 : selectedOptions + 1;
     disableSelect();
@@ -135,6 +62,10 @@ submitBtn.addEventListener("click", () => {
     console.log("Selected names:", selectedNames);
     setModels();
 });
+
+}
+
+
 
 function setModels() {
     // Carrega os modelos com base nas respostas selecionadas
@@ -175,17 +106,11 @@ function setModels() {
             console.log("Error");
         }
     }
-    isLoadCalled = true;
-}
-
-function loadModels() {
-    for (let i = 0; i < numObj[0]; i++) {
-        modelA[i] = loadModel('Modules/'+models[0]+'/A'+(i+1)+'.obj');
-    }
-    for (let i = 0; i < numObj[1]; i++) {
-        modelB[i] = loadModel('Modules/'+models[1]+'/A'+(i+1)+'.obj');
-    }
-    for (let i = 0; i < numObj[2]; i++) {
-        modelC[i] = loadModel('Modules/'+models[2]+'/A'+(i+1)+'.obj');
-    }
+    localStorage.setItem("model1", models[0]);
+    localStorage.setItem("model1_numObj", numObj[0]);
+    localStorage.setItem("model2", models[1]);
+    localStorage.setItem("model2_numObj", numObj[1]);
+    localStorage.setItem("model3", models[2]);
+    localStorage.setItem("model3_numObj", numObj[2]);
+    window.location.replace(window.location.href + "sketch.html");
 }

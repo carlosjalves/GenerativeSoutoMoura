@@ -1,65 +1,44 @@
 const gridSize = 3; // Size of the grid
 const cubeSize = 30; // Size of each cube
 
-const modelA = []; // Array of 3D models
-const modelB = []; // Array of 3D models
-const modelC = []; // Array of 3D models
-const modelD = []; // Array of 3D models
-const modelE = []; // Array of 3D models
-const modelF = []; // Array of 3D models
-const modelG = []; // Array of 3D models
-const modelH = []; // Array of 3D models
-const modelI = []; // Array of 3D models
-const modelJ = []; // Array of 3D models
-
 // Grid Cells -> Empty
 let grid = [];
 
 //selected models
+var model1_name = localStorage.getItem("model1");
+var model1_numObj = localStorage.getItem("model1_numObj");
+var model2_name = localStorage.getItem("model2");
+var model2_numObj = localStorage.getItem("model2_numObj");
+var model3_name = localStorage.getItem("model3");
+var model3_numObj = localStorage.getItem("model3_numObj");
+
 var model1 = []; // Array of 3D models
 var model2 = []; // Array of 3D models
 var model3 = []; // Array of 3D models
 
 //tiles
 var tiles = [];
+//module timer counter - building...
 let counter = 0;
 
 function preload() {
   // Load the 3D models
-  for (let i = 0; i < 18; i++) {
-      modelA[i] = loadModel('Modules/Arrabida/A'+(i+1)+'.obj');
-      modelI[i] = loadModel('Modules/Quinta_Lago/A'+(i+1)+'.obj');
-  }
-  for (let i = 0; i < 22; i++) {
-      modelB[i] = loadModel('Modules/Bom_Jesus/A'+(i+1)+'.obj');
-  }
-  for (let i = 0; i < 27; i++) {
-      modelC[i] = loadModel('Modules/Cantareira/A'+(i+1)+'.obj');
-      modelF[i] = loadModel('Modules/Cubos/A'+(i+1)+'.obj');
-      modelG[i] = loadModel('Modules/Estadio_Braga/A'+(i+1)+'.obj');
-  }
-  for (let i = 0; i < 19; i++) {
-      modelD[i] = loadModel('Modules/Cascais/A'+(i+1)+'.obj');
-  }
-  for (let i = 0; i < 21; i++) {
-      modelE[i] = loadModel('Modules/Cinema/A'+(i+1)+'.obj');
-  }
-  for (let i = 0; i < 16; i++) {
-      modelH[i] = loadModel('Modules/Paula_Rego/A'+(i+1)+'.obj');
-  }
-  for (let i = 0; i < 13; i++) {
-      modelJ[i] = loadModel('Modules/Sete_Cidades/A'+(i+1)+'.obj');
-  }
+//console.log(model1_name, model1_numObj);
+  for (let i = 0; i < model1_numObj; i++) {
+    model1[i] = loadModel('Modules/'+model1_name+'/A'+(i+1)+'.obj');
+}
+for (let i = 0; i < model2_numObj; i++) {
+    model2[i] = loadModel('Modules/'+model2_name+'/A'+(i+1)+'.obj');
+}
+for (let i = 0; i < model3_numObj; i++) {
+    model3[i] = loadModel('Modules/'+model3_name+'/A'+(i+1)+'.obj');
+}
 }
 
 function setup() {
     createCanvas(800, 800, WEBGL);
-
-    //select models
-    model1 = modelC;
-    model2 = modelA;
-    model3 = modelB;
     
+    console.log(model1);
     //load modules of A building + CREATE TILES
     for(let h=0; h < model1.length; h++){
         //module limits evaluation
@@ -134,6 +113,7 @@ function setup() {
         tiles[h + (model1.length+model2.length) ] = new Tile(model3[h], max_x-min_x, max_y-min_y, max_z-min_z); 
 }
 
+//create grid 3x3 cube
   for(let i = 0; i < gridSize*gridSize*gridSize; i++){
     if(i < 9){
       if(i < 3) grid[i] = new Cell(i,0,0);
@@ -152,65 +132,12 @@ function setup() {
     }
   }
   
-  //console.log(grid);
+  //for each cell, if not full - select module
   while(counter < grid.length){
     if(!grid[counter].filled) setTimeout(selectModules(counter),1000);
 }
-}
-
-function selectModules(i){
-  let random_index = round(random(tiles.length));
-    let z_check = true;
-    let x_check = true;
-    let y_check = true;
-    if(grid[i].x > 0){
-        x_check = compareEdges("left", random_index, i);
-    }
-      else if(grid[i].y > 0){
-        y_check = compareEdges("back", random_index, i);
-      }
-      else if(grid[i].z > 0){
-        z_check = compareEdges("down", random_index, i);
-      }
-      if(z_check && y_check && x_check){
-        grid[i].filled = true;
-        grid[i].module_index = random_index; 
-        counter++;
-      }
-    }
-
-//compare tile edges -> tile 1 in grid + tile 2 to add
-function compareEdges(direction, tile_index, cell){
-  if(direction == "left"){
-    if(tiles[grid[cell-1].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-1].module_index].z_size == tiles[tile_index].z_size) return true;
-    else return false;
-  }  
-    else if(direction == "down"){
-      if(tiles[grid[cell-9].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-9].module_index].z_size == tiles[tile_index].z_size) return true;
-      else return false;
-    }
-    else if(direction == "back"){
-      if(tiles[grid[cell-3].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-3].module_index].z_size == tiles[tile_index].z_size) return true;
-      else return false;
-}
-}
-
-
-
-function startOver() {
-  // Create cell for each spot on the grid
-  for (let i = 0; i < gridSize*gridSize*gridSize; i++) {
-    grid[i] = new Cell(tiles.length);
-  }
-}
-
-function checkValid(arr, valid) {
-  for (let i = arr.length - 1; i >= 0; i--) {
-    let element = arr[i];
-    if (!valid.includes(element)) {
-      arr.splice(i, 1);
-    }
-  }
+//filled grid result
+console.log(grid);
 }
 
 /* scan each grid module
@@ -221,194 +148,124 @@ for 1st select only
 until all 27cells are filled
 might take longer but it can produce better results */
 
+function selectModules(i){
+  //select random tile
+  let random_index = round(random(tiles.length));
+    //neighbour validation check
+    let z_check = true;
+    let x_check = true;
+    let y_check = true;
+    //if has cell to left compare
+    if(grid[i].x > 0){
+        x_check = compareEdges("left", random_index, i);
+    }
+    //if has cell to back compare
+    else if(grid[i].y > 0){
+        y_check = compareEdges("back", random_index, i);
+    }
+    //if has cell to down compare    
+    else if(grid[i].z > 0){
+        z_check = compareEdges("down", random_index, i);
+    }
+    //if all neighbours are compatible add to grid
+    if(z_check && y_check && x_check){
+        //check filled cell
+        grid[i].filled = true;
+        //add cell to grid
+        grid[i].module_index = random_index; 
+        //advance to next cell
+        counter++;
+      }
+    //else select random again...  
+    }
+
+//compare tile edges -> direction (left, bottom, back -> scans in order of grid so no need to check to front)
+//tile_index -> random tile index + cell -> current cell to place tile[random index]
+function compareEdges(direction, tile_index, cell){
+  if(direction == "left"){ //x
+    //check if y and z are same size
+    if(tiles[grid[cell-1].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-1].module_index].z_size == tiles[tile_index].z_size) return true;
+    else return false;
+  }  
+    else if(direction == "down"){ //y
+      //check if z and x are same size
+      if(tiles[grid[cell-9].module_index].x_size == tiles[tile_index].x_size && tiles[grid[cell-9].module_index].z_size == tiles[tile_index].z_size) return true;
+      else return false;
+    }
+    else if(direction == "back"){ //z
+      //check if y and x are same size
+      if(tiles[grid[cell-3].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-3].module_index].x_size == tiles[tile_index].x_size) return true;
+      else return false;
+}
+}
+
 function draw() {
-    background(220);
+    background(color('#878988'));
     lights();
+    //scale all building
+    scale(2); 
     rotateY(frameCount * 0.01); // Rotate the grid
-                //console.log(cell);
+    //console.log(cell);
   
 
-                for(let i=0; i<grid.length; i++){
-                  const xPos = grid[i].x * cubeSize;
-                  const yPos = grid[i].y * cubeSize;
-                  const zPos = grid[i].z * cubeSize;
-                  if(grid[i].filled){
-                    drawModule(xPos, yPos, zPos, tiles[grid[i].module_index].obj);
-                  }
-                }
+   for(let i=0; i<grid.length; i++){
+      //determine place according to grid
+      const xPos = grid[i].x * cubeSize;
+      const yPos = grid[i].y * cubeSize;
+      const zPos = grid[i].z * cubeSize;
+      //if module is selected draw in position           
+      if(grid[i].filled){
+          drawModule(xPos, yPos, zPos, tiles[grid[i].module_index].obj,1); //stroke
+          drawModule(xPos, yPos, zPos, tiles[grid[i].module_index].obj,2); //w/o stroke
+          //drawCube(xPos, yPos, zPos); //grid limits
+        }
+      }
               
-            }
+ }
 
-
+//draw grid limits
 function drawCube(xP,yP,zP){
       push();
       translate(xP, yP, zP);
-      scale(4); // Scale the model if needed
-      //noStroke();
-      //fill(30);
       noFill();
       stroke(0,255,0);
       rotateX(-PI);
       rotateY(-PI);
       //rotateZ(PI/2);
-      translate(0,-15);
+      //translate(0,-15);
       box(cubeSize);
       pop();
 }
 
-
-function drawModule(xP,yP,zP,mod){
-    // Set the model for the last row
+//draw modules
+function drawModule(xP,yP,zP,mod, type){
     // Draw the model
-    push();
-    translate(xP, yP, zP);
-    scale(4); // Scale the model if needed
-    noStroke();
-    fill(180);
-    rotateX(-PI);
-    rotateY(-PI);
-    //rotateZ(PI/2);
-    translate(0,-15);
-    model(mod);
-    pop();
-}
-
-
-
-/* function drawRow(x,z,xP,yP,zP,models){
-    // Set the model for the last row
-    const modelIndex = x * gridSize + z;
-    // Draw the model
-    push();
-    translate(xP, yP, zP);
-    scale(4); // Scale the model if needed
-    noStroke();
-    fill(180);
-    rotateX(-PI);
-    rotateY(-PI);
-    //rotateZ(PI/2);
-    translate(0,-15);
-    model(models[modelIndex]);
-    pop();
-} */
-
-function wfc(){
-// Make a copy of grid
-let gridCopy = grid.slice();
-// Remove any collapsed cells
-gridCopy = gridCopy.filter((a) => !a.collapsed);
-
-// The algorithm has completed if everything is collapsed
-if (grid.length == 0) {
-  return;
-}
-
-
-// Pick a cell with least entropy
-// Sort by entropy
-/* gridCopy.sort((a, b) => {
-  return a.options.length - b.options.length;
-}); */
-console.log(gridCopy);
-
-/* // Keep only the lowest entropy cells
-let len = gridCopy[0].options.length;
-let stopIndex = 0;
-for (let i = 1; i < gridCopy.length; i++) {
-  if (gridCopy[i].options.length > len) {
-    stopIndex = i;
-    break;
-  }
-}
-if (stopIndex > 0) gridCopy.splice(stopIndex); */
-
-// Collapse a cell
-const cell = random(gridCopy);
-cell.collapsed = true;
-const pick = random(cell.options);
-if (pick === undefined) {
-  startOver();
-  return;
-}
-else cell.options = [pick];
-
-//Calculate Entropy
-const nextGrid = [];
-for (let j = 0; j < gridSize; j++) { //X
-  for (let i = 0; i < gridSize; i++) { // Y
-    for(let h = 0; h < gridSize; h++){ // Z
-      let index = ((h * gridSize + i) * gridSize) + j;
-       if (grid[index].collapsed) {
-          nextGrid[index] = grid[index];
-      } else {
-        let options = new Array(tiles.length).fill(0).map((x, i) => i);
-      // Look RIGHT
-      if (j < gridSize - 1) {
-        let right = grid[((h * gridSize + i) * gridSize) + j + 1];
-        let validOptions = [];
-        for (let option of right.options) {
-          let valid = tiles[option].left;
-          validOptions = validOptions.concat(valid);
-        }
-        checkValid(options, validOptions);
-      }
-      // Look UP
-      if (h < gridSize - 1) {
-        let up = grid[(((h+1) * gridSize + i) * gridSize) + j];
-        let validOptions = [];
-        for (let option of up.options) {
-          let valid = tiles[option].down;
-          validOptions = validOptions.concat(valid);
-        }
-        checkValid(options, validOptions);
-      }
-      // Look DOWN
-      if (h > 0) {
-        let down = grid[(((h-1) * gridSize + i) * gridSize) + j];
-        let validOptions = [];
-        for (let option of down.options) {
-          let valid = tiles[option].up;
-          validOptions = validOptions.concat(valid);
-        }
-        checkValid(options, validOptions);
-      }
-      // Look LEFT
-      if (j > 0) {
-        let left = grid[((h * gridSize + i) * gridSize) + j - 1];
-        let validOptions = [];
-        for (let option of left.options) {
-          let valid = tiles[option].right;
-          validOptions = validOptions.concat(valid);
-        }
-        checkValid(options, validOptions);
-      }
-      // Look FRONT
-      if (i < gridSize - 1) {
-        let front = grid[((h * gridSize + (i+1)) * gridSize) + j];
-        let validOptions = [];
-        for (let option of front.options) {
-          let valid = tiles[option].back;
-          validOptions = validOptions.concat(valid);
-        }
-        checkValid(options, validOptions);
-      }
-      // Look BACK
-      if (i > 0) {
-        let back = grid[((h * gridSize + (i-1)) * gridSize) + j];
-        let validOptions = [];
-        for (let option of back.options) {
-          let valid = tiles[option].front;
-          validOptions = validOptions.concat(valid);
-        }
-        checkValid(options, validOptions);
-      }
-        // I could immediately collapse if only one option left?
-        nextGrid[index] = new Cell(options);
+    if(type == 1){ //1st object with stroke
+      push();
+      translate(xP, yP, zP);
+      fill(-255);
+      //noFill();
+      stroke(255);
+      rotateX(-PI);
+      rotateY(-PI);
+      //rotateZ(PI/2);
+      translate(0,-15);
+      model(mod);
+      pop();
     }
-
+    else if(type == 2){ //2nd object w/o stroke
+      push();
+      translate(xP, yP, zP);
+      noStroke();
+      fill(0);
+      rotateX(-PI);
+      rotateY(-PI);
+      //rotateZ(PI/2);
+      translate(0,-15);
+      scale(1.015);
+      //translate(0.3, 0, 0.3);
+      model(mod);
+      pop();
     }
-   
-  }
-}
-grid = nextGrid;
+    
 }

@@ -2,12 +2,120 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Generative Souto Moura</title>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
-    <script src="sketch.js"></script>
-    <script src="cell.js"></script>
-    <script src="tile.js"></script>
+    <title>Select Generative Souto Moura</title>
+    <style>
+        div {
+            display: flex;
+        }
+        select {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
+<div id="nameList">
+    <select id="menu1">
+        <option value="">Selecionar adjetivo</option>
+        <option value="Arrogante">Arrogante</option>
+        <option value="Artística">Artística</option>
+        <option value="Aventureira">Aventureira</option>
+        <option value="Chamativa">Chamativa</option>
+        <option value="Confiante">Confiante</option>
+        <option value="Criativa">Criativa</option>
+        <option value="Desafiante">Desafiante</option>
+        <option value="Desajustada">Desajustada</option>
+        <option value="Determinada">Determinada</option>
+        <option value="Diferente">Diferente</option>
+        <option value="Discreta">Discreta</option>
+        <option value="Divertida">Divertida</option>
+        <option value="Enérgica">Enérgica</option>
+        <option value="Extrovertida">Extrovertida</option>
+        <option value="Fria">Fria</option>
+        <option value="Gentil">Gentil</option>
+        <option value="Harmoniosa">Harmoniosa</option>
+        <option value="Ingénua">Ingénua</option>
+        <option value="Lógica">Lógica</option>
+        <option value="Monótona">Monótona</option>
+        <option value="Observadora">Observadora</option>
+        <option value="Organizada">Organizada</option>
+        <option value="Orgulhosa">Orgulhosa</option>
+        <option value="Original">Original</option>
+        <option value="Otimista">Otimista</option>
+        <option value="Paciente">Paciente</option>
+        <option value="Perfecionista">Perfecionista</option>
+        <option value="Ponderada">Ponderada</option>
+        <option value="Relaxada">Relaxada</option>
+        <option value="Reservada">Reservada</option>
+    </select>
+
+    <select id="menu2">
+        <option value="">Selecionar adjetivo</option>
+        <option value="Arrogante">Arrogante</option>
+        <option value="Artística">Artística</option>
+        <option value="Aventureira">Aventureira</option>
+        <option value="Chamativa">Chamativa</option>
+        <option value="Confiante">Confiante</option>
+        <option value="Criativa">Criativa</option>
+        <option value="Desafiante">Desafiante</option>
+        <option value="Desajustada">Desajustada</option>
+        <option value="Determinada">Determinada</option>
+        <option value="Diferente">Diferente</option>
+        <option value="Discreta">Discreta</option>
+        <option value="Divertida">Divertida</option>
+        <option value="Enérgica">Enérgica</option>
+        <option value="Extrovertida">Extrovertida</option>
+        <option value="Fria">Fria</option>
+        <option value="Gentil">Gentil</option>
+        <option value="Harmoniosa">Harmoniosa</option>
+        <option value="Ingénua">Ingénua</option>
+        <option value="Lógica">Lógica</option>
+        <option value="Monótona">Monótona</option>
+        <option value="Observadora">Observadora</option>
+        <option value="Organizada">Organizada</option>
+        <option value="Orgulhosa">Orgulhosa</option>
+        <option value="Original">Original</option>
+        <option value="Otimista">Otimista</option>
+        <option value="Paciente">Paciente</option>
+        <option value="Perfecionista">Perfecionista</option>
+        <option value="Ponderada">Ponderada</option>
+        <option value="Relaxada">Relaxada</option>
+        <option value="Reservada">Reservada</option>
+    </select>
+    <select id="menu3">
+        <option value="">Selecionar adjetivo</option>
+        <option value="Arrogante">Arrogante</option>
+        <option value="Artística">Artística</option>
+        <option value="Aventureira">Aventureira</option>
+        <option value="Chamativa">Chamativa</option>
+        <option value="Confiante">Confiante</option>
+        <option value="Criativa">Criativa</option>
+        <option value="Desafiante">Desafiante</option>
+        <option value="Desajustada">Desajustada</option>
+        <option value="Determinada">Determinada</option>
+        <option value="Diferente">Diferente</option>
+        <option value="Discreta">Discreta</option>
+        <option value="Divertida">Divertida</option>
+        <option value="Enérgica">Enérgica</option>
+        <option value="Extrovertida">Extrovertida</option>
+        <option value="Fria">Fria</option>
+        <option value="Gentil">Gentil</option>
+        <option value="Harmoniosa">Harmoniosa</option>
+        <option value="Ingénua">Ingénua</option>
+        <option value="Lógica">Lógica</option>
+        <option value="Monótona">Monótona</option>
+        <option value="Observadora">Observadora</option>
+        <option value="Organizada">Organizada</option>
+        <option value="Orgulhosa">Orgulhosa</option>
+        <option value="Original">Original</option>
+        <option value="Otimista">Otimista</option>
+        <option value="Paciente">Paciente</option>
+        <option value="Perfecionista">Perfecionista</option>
+        <option value="Ponderada">Ponderada</option>
+        <option value="Relaxada">Relaxada</option>
+        <option value="Reservada">Reservada</option>
+    </select>
+    <button id="submitBtn" style="display: none;">Submit</button>
+</div>
+<script src="index.js"></script>
 </body>
 </html>
