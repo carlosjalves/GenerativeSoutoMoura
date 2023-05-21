@@ -6,16 +6,65 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 
     <style>
-        div {
-            display: flex;
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
+        h1{
+            font: 24pt "Playfair Display", sans-serif;
+            margin: 0 auto;
+
         }
-        select {
-            margin-right: 10px;
+
+        #nameList {
+            margin: 0 auto;
+            width: 720px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            height: 280px;
+            gap: 20px;
+        }
+
+        #menu1, #menu2, #menu3 {
+            font: 11pt "Playfair Display", sans-serif;
+            margin-top: 15px;
+            background-color: #ffffff;
+            color: #444444;
+            border-style: solid;
+            border-color: #bbbbbb;
+            cursor: pointer;
+            width: 200px;
+            padding: 10px;
+        }
+
+        #menu1:hover, #menu2:hover, #menu3:hover{
+            border-color: #444444;
+        }
+
+        button {
+            font: 11pt "Playfair Display", sans-serif;
+            margin-top: 15px;
+            background-color: #444444;
+            color: #ffffff;
+            border-style: solid;
+            border-color: #444444;
+            cursor: pointer;
+            width: 200px;
+            padding: 10px;
+        }
+
+        button:hover{
+            background-color: #262626;
+            border-color: #262626;
         }
     </style>
 </head>
 <body>
+
 <div id="nameList">
+    <h1>Generative Souto Moura</h1>
+    <div class="menu">
     <select id="menu1">
         <option value="">Selecionar adjetivo</option>
         <option value="Arrogante">Arrogante</option>
@@ -116,7 +165,8 @@
         <option value="Relaxada">Relaxada</option>
         <option value="Reservada">Reservada</option>
     </select>
-    <button id="submitBtn" style="display: none;">Submit</button>
+    </div>
+    <button id="submitBtn" style="display: none;">Submeter</button>
 </div>
 <script src="test.js"></script>
 </body>
