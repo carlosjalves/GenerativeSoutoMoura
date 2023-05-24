@@ -9,10 +9,6 @@ let selectedNames = [];
 let models = [];
 let numObj = [];
 
-let colorR, colorG, colorB;
-
-let isLoadCalled = false;
-
 const checkboxes = document.querySelectorAll(".nameCheckbox");
 checkboxes.forEach((checkbox) => checkbox.changed(handleCheckboxChange));
 
@@ -112,5 +108,4 @@ function setModels() {
     localStorage.setItem("model2_numObj", numObj[1]);
     localStorage.setItem("model3", models[2]);
     localStorage.setItem("model3_numObj", numObj[2]);
-    window.location.replace(window.location.href + "sketch.html");
 }
