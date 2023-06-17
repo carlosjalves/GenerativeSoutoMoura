@@ -1,3 +1,8 @@
+let canvasWidth = window.innerWidth;
+let canvasHeight = window.innerHeight;
+
+var frames = 0;
+
 const gridSize = 3; // Size of the grid
 const cubeSize = 30; // Size of each cube
 
@@ -39,9 +44,9 @@ for (let i = 0; i < model3_numObj; i++) {
 }
 
 function setup() {
-    createCanvas(1280, 720, WEBGL);
+    createCanvas(canvasWidth, canvasHeight, WEBGL);
 
-    console.log(model1);
+    //console.log(model1);
     //load modules of A building + CREATE TILES
     for(let h=0; h < model1.length; h++){
         //module limits evaluation
@@ -120,7 +125,8 @@ function setup() {
         }
         
         tiles[h + (model1.length+model2.length) ] = new Tile(model3[h], max_x-min_x, max_y-min_y, max_z-min_z); 
-}
+        //console.log("total=" + tiles.length);
+      }
 
 //create grid 3x3 cube
   for(let i = 0; i < gridSize*gridSize*gridSize; i++){
@@ -143,7 +149,7 @@ function setup() {
   
   //for each cell, if not full - select module
   while(counter < grid.length){
-    if(!grid[counter].filled) setTimeout(selectModules(counter),1000);
+    if(!grid[counter].filled) setTimeout(selectModules(counter), 1000);
 }
 //filled grid result
 console.log(grid);
@@ -159,7 +165,7 @@ might take longer but it can produce better results */
 
 function selectModules(i){
   //select random tile
-  let random_index = round(random(tiles.length));
+  let random_index = round(random(tiles.length-1));
     //neighbour validation check
     let z_check = true;
     let x_check = true;
@@ -193,6 +199,7 @@ function selectModules(i){
 function compareEdges(direction, tile_index, cell){
   if(direction == "left"){ //x
     //check if y and z are same size
+    //console.log(tile_index, cell);
     if(tiles[grid[cell-1].module_index].y_size == tiles[tile_index].y_size && tiles[grid[cell-1].module_index].z_size == tiles[tile_index].z_size) return true;
     else return false;
   }  
@@ -211,6 +218,7 @@ function compareEdges(direction, tile_index, cell){
 function draw() {
     background(colorR,colorG,colorB);
 
+    orbitControl();
     //lights();
     pointLight(100,0,0,-800,0,0);
     pointLight(0,0,100,800,0,0);
@@ -219,10 +227,10 @@ function draw() {
 
     scale(2);
 
-    rotY = frameCount * 0.01;
-    translate(0,-20);
+    if(!mouseIsPressed) frames += 1;
+    rotY = frames * 0.01;
+    translate(-1.5*cubeSize,-20);
     rotateY(rotY); // Rotate the grid
-  
 
    for(let i=0; i<grid.length; i++){
       //determine place according to grid
@@ -271,10 +279,9 @@ function drawModule(xP,yP,zP,mod, type){
       //fill(colorR, colorG, colorB);
       rotateX(-PI);
       rotateY(-PI);
-      //rotateZ(PI/2);
-      translate(0,-15);
-      scale(1.5);
-      //translate(0.3, 0, 0.3);
+      rotateZ(PI/2);
+      translate(15,-15);
+      translate(0.3, 0, 0.3);
       model(mod);
       pop();
     }

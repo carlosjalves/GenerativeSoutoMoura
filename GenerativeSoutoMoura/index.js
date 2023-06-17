@@ -12,6 +12,12 @@ let numObj = [];
 const checkboxes = document.querySelectorAll(".nameCheckbox");
 checkboxes.forEach((checkbox) => checkbox.changed(handleCheckboxChange));
 
+let index_colorR = Math.random() * (255-150) + 150;
+let index_colorG = Math.random() * (255-150) + 150;
+let index_colorB = Math.random() * (255-150) + 150;
+
+document.querySelector('body').style.backgroundColor = "rgb(" + index_colorR + "," + index_colorG + "," + index_colorB + ")";
+
 function handleSelect() {
         if (menu1.value !== "" && menu2.value !== "" && menu3.value !== "") {
             submitBtn.style.display = "block";
